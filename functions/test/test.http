@@ -1,0 +1,25 @@
+# POST http://localhost:5001/jsdataentry-c9bf7/us-central1/apiEpipickSeizures
+POST https://us-central1-jsdataentry-c9bf7.cloudfunctions.net/apiEpipickSeizures
+Content-Type: application/json
+
+{
+  "a": 0,
+  "b": 0,
+  "c": 0,
+  "d": 0,
+  "e": 0,
+  "f": { "f": 0, "f0": 0, "f2": 0 },
+  "g": 1,
+  "h": 0
+}
+
+###
+# POST http://localhost:5001/jsdataentry-c9bf7/us-central1/apiEpipickMed
+POST https://us-central1-jsdataentry-c9bf7.cloudfunctions.net/apiEpipickMed
+Content-Type: application/json
+
+{
+    "a":["GTCS"],
+    "age":"32",
+    "sex":"M"
+}
