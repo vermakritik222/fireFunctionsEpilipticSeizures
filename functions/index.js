@@ -154,7 +154,7 @@ exports.apiEpipickMed = functions.firestore
     const collection = admin
       .firestore()
       .collection(`/ApiSeizuresResponse/${id}/ApiSeizuresMedResponse`);
-    console.log({ data, age, gander, a });
+    // console.log({ data, age, gander, a });
 
     if (
       a.includes("GTCS") &&
