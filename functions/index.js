@@ -18,7 +18,7 @@ exports.apiHello = functions.https.onRequest((req, res) => {
     g: 1,
     h: 0,
     age: 24,
-    sex: "M",
+    gander: "M",
   });
 
   res.send("hello from Firebase function");
@@ -31,10 +31,10 @@ exports.apiEpipickSeizures = functions.firestore
     const { id } = context.params;
 
     const ans = [];
-    let { userId, a, b, c, d, e, f, f1, f2, g, h, age, sex } =
+    let { userId, a, b, c, d, e, f, f1, f2, g, h, age, gander } =
       snap._fieldsProto;
 
-    // console.log({ a, b, c, d, e, f, g, h, age, sex });
+    // console.log({ a, b, c, d, e, f, g, h, age, gander });
 
     if (
       !a?.integerValue ||
@@ -146,13 +146,15 @@ exports.apiEpipickMed = functions.firestore
   .document("/ApiSeizuresResponse/{id}")
   .onCreate((snap, context) => {
     const { id } = context.params;
-    const { userId, data, age, sex } = snap._fieldsProto;
+    const { userId, data, age, gander } = snap._fieldsProto;
     let a = data.arrayValue.values;
     a = a.map((el) => {
       return el.stringValue;
     });
-    const collection = admin.firestore().collection(`/ApiSeizuresResponse/${id}/ApiSeizuresMedResponse`);
-    console.log({ data, age, sex, a });
+    const collection = admin
+      .firestore()
+      .collection(`/ApiSeizuresResponse/${id}/ApiSeizuresMedResponse`);
+    console.log({ data, age, gander, a });
 
     if (
       a.includes("GTCS") &&
@@ -219,6 +221,36 @@ exports.apiEpipickMed = functions.firestore
         G1: ["VPA"],
         G2: ["LTG", "LEV"],
         G3: ["TPM", "ZNS", "CLB"],
+      };
+      return collection.add({
+        resTo: id,
+        userId: userId.stringValue,
+        status: "success",
+        data,
+        docCreatedAt: new Date(),
+      });
+    }
+
+    if (a.includes("focal") && a.includes("GTCS") && age >= 21) {
+      const data = {
+        G1: ["LEV", "CBZ", "LTG", "OXC", "ESL", "LCM"],
+        G2: ["VPA", "PER", "PHT", "BRV", "CLB", "TPM", "ZNS"],
+        G3: ["PB", "GBP", "PGB"],
+      };
+      return collection.add({
+        resTo: id,
+        userId: userId.stringValue,
+        status: "success",
+        data,
+        docCreatedAt: new Date(),
+      });
+    }
+
+    if (a.includes("focal") && a.includes("GTCS") && age21) {
+      const data = {
+        G1: ["VPA", "LTG", "LEV"],
+        G2: ["CLB", "CBZ", "PER", "ESL", "OXC", "LCM"],
+        G3: ["PB", "TPM", "ZNS"],
       };
       return collection.add({
         resTo: id,
@@ -304,21 +336,4 @@ exports.apiEpipickMed = functions.firestore
         docCreatedAt: new Date(),
       });
     }
-
-    // Unknown
-    // if (a === "focal") {
-    //   return {
-    //     G1: ["LEV", "CBZ", "LTG", "OXC", "ESL", "LCM"],
-    //     G2: ["TPM", "VPA", "PER", "PHT", "BRV", "ZNS"],
-    //     G3: ["CLB", "PB", "GBP", "PGB"],
-    //   };
-    // }
-
-    // if (a === "focal") {
-    //   return {
-    //     G1: ["LEV", "CBZ", "LTG", "OXC", "ESL", "LCM"],
-    //     G2: ["TPM", "VPA", "PER", "PHT", "BRV", "ZNS"],
-    //     G3: ["CLB", "PB", "GBP", "PGB"],
-    //   };
-    // }
   });
